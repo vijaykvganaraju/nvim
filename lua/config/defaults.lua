@@ -13,6 +13,7 @@ vim.opt.updatetime = 50
 -- UI Customization
 vim.opt.scrolloff = 8
 vim.opt.colorcolumn = "80"
+vim.opt.wrap = false
 
 -- File Handling & History
 vim.opt.swapfile = false

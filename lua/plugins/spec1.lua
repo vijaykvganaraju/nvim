@@ -18,9 +18,7 @@ return {
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
-		opts = {
-			-- leave empty for defaults, or customize later
-		},
+		opts = {},
 		keys = {
 			{
 				"<leader>?",
@@ -90,6 +88,37 @@ return {
 		end
 	},
     { "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
+	{ "numToStr/Comment.nvim", event = "VeryLazy", opts = {} },
+	{
+		"stevearc/conform.nvim",
+		event = { "BufReadPost" },
+		cmd = { "ConformInfo" },
+		keys = {
+			{ "<leader>cf", function() require("conform").format({ async = true }) end, desc = "Format buffer" },
+		},
+		opts = {
+			formatters_by_ft = {
+				lua = { "stylua" },
+				python = { "black" },
+				javascript = { "prettier" },
+				typescript = { "prettier" },
+				json = { "prettier" },
+				yaml = { "prettier" },
+				rust = { "rustfmt" },
+				java = { "google-java-format" },
+				["*"] = { "trim_whitespace" },
+			},
+		},
+	},
+	
+	-- Navigation
+	{
+		"ThePrimeagen/harpoon",
+		branch = "harpoon2",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		event = "VeryLazy",
+		opts = {},
+	},
 
 	-- Completion engine (alternative to nvim-cmp)
 	{
@@ -97,7 +126,12 @@ return {
 		desc = "Text completion engine",
 		version = "*",
 		opts = {
-			keymap = { preset = "default" },
+			keymap = {
+				preset = "default",
+				["<Tab>"] = { "select_next", "fallback" },
+				["<S-Tab>"] = { "select_prev", "fallback" },
+				["<CR>"] = { "accept", "fallback" },
+			},
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
 			},
@@ -192,12 +226,94 @@ return {
 			.. "/jdtls-workspaces/"
 			.. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
+			local runtimes = {
+				{
+					name = "JavaSE-1.8",
+					path = "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home",
+				},
+				{
+					name = "JavaSE-11",
+					path = "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home",
+				},
+				{
+					name = "JavaSE-17",
+					path = "/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home",
+				},
+				{
+					name = "JavaSE-21",
+					path = "/Library/Java/JavaVirtualMachines/zulu-21.jdk/Contents/Home",
+					default = true,
+				},
+			}
+
 			-- Start or attach jdtls
 			jdtls.start_or_attach({
-				cmd = { "jdtls" },
+				cmd = {
+					"jdtls",
+					"--java-executable", "/Library/Java/JavaVirtualMachines/zulu-21.jdk/Contents/Home/bin/java",
+				},
 				root_dir = root_dir,
 				workspace_folder = workspace_dir,
+				settings = { java = { configuration = { runtimes = runtimes } } },
 			})
+		end,
+	},
+
+	-- Debug Adapter Protocol
+	{
+		"mfussenegger/nvim-dap",
+		event = "VeryLazy",
+		dependencies = {
+			"rcarriga/nvim-dap-ui",
+			"nvim-neotest/nvim-nio",
+			"theHamsta/nvim-dap-virtual-text",
+		},
+		config = function()
+			local dap = require("dap")
+			local dapui = require("dapui")
+
+			dapui.setup()
+			require("nvim-dap-virtual-text").setup()
+			
+			dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
+			dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+			dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+		end,
+	},
+
+	-- Python DAP
+	{
+		"mfussenegger/nvim-dap-python",
+		ft = "python",
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function()
+			require("dap-python").setup("python")
+		end,
+	},
+
+	-- JavaScript/TypeScript DAP
+	{
+		"mxsdev/nvim-dap-vscode-js",
+		ft = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function()
+			require("dap-vscode-js").setup({
+				debugger_path = vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter",
+				adapters = { "pwa-node", "pwa-chrome" },
+			})
+
+			-- Configure for Node.js
+			for _, lang in ipairs({ "javascript", "typescript" }) do
+				require("dap").configurations[lang] = {
+					{
+						type = "pwa-node",
+						request = "launch",
+						name = "Launch file",
+						program = "${file}",
+						cwd = "${workspaceFolder}",
+					},
+				}
+			end
 		end,
 	},
 }
