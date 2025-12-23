@@ -23,3 +23,5 @@ vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 -- Specialized Path Detection
 vim.opt.isfname:append("@-@")
 
+-- Clipboard sync with system clipboard
+vim.opt.clipboard = "unnamedplus"

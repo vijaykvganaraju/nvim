@@ -59,3 +59,11 @@ end, { desc = "List Breakpoints" })
 -- Java Debug (jdtls)
 vim.keymap.set("n", "<leader>dm", function() require("jdtls").test_nearest_method() end, { desc = "Debug Test Method" })
 vim.keymap.set("n", "<leader>dC", function() require("jdtls").test_class() end, { desc = "Debug Test Class" })
+
+-- LazyGit
+vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
+
+-- Supermaven keymaps (configured in spec1.lua plugin setup)
+-- <C-,> - Accept suggestion (insert mode)
+-- <C-.> - Accept word (insert mode)
+-- <C-/> - Clear suggestion (insert mode)

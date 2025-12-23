@@ -119,6 +119,10 @@ return {
 		event = "VeryLazy",
 		opts = {},
 	},
+	{
+		"kdheepak/lazygit.nvim",
+		cmd = "LazyGit",
+	},
 
 	-- Completion engine (alternative to nvim-cmp)
 	{
@@ -137,6 +141,19 @@ return {
 			},
 		},
 	},
+	{
+		"supermaven-inc/supermaven-nvim",
+		config = function()
+			require("supermaven-nvim").setup({
+				-- Keymaps: see remap.lua for details
+				keymaps = {
+					accept_suggestion = "<C-,>",
+					clear_suggestion = "<C-/>",
+					accept_word = "<C-.>",
+				},
+			})
+		end,
+	},
 
 	-- Tools for managing LSP servers
 	{
@@ -146,6 +163,7 @@ return {
 				"pyright",       -- Python
 				"ts-standard",   -- JS/TS Linter
 				"ts_ls", -- JS/TS LSP
+				"eslint-lsp",    -- ESLint LSP
 				"rust-analyzer", -- Rust
 				"jdtls",         -- Java
 				"lua-language-server", -- Lua
@@ -160,6 +178,7 @@ return {
 			ensure_installed = {
 				"pyright",
 				"ts_ls",
+				"eslint",
 				"rust_analyzer",
 				"lua_ls",
 			},
@@ -187,6 +206,15 @@ return {
 
 			-- JS / TS
 			vim.lsp.config("ts_ls", {})
+
+			-- ESLint
+			vim.lsp.config("eslint", {
+				settings = {
+					eslint = {
+						workingDirectories = { mode = "auto" },
+					},
+				},
+			})
 
 			-- Rust
 			vim.lsp.config("rust_analyzer", {})
@@ -274,6 +302,17 @@ return {
 
 			dapui.setup()
 			require("nvim-dap-virtual-text").setup()
+			
+			-- Java attach configuration
+			dap.configurations.java = {
+				{
+					type = "java",
+					name = "Attach to 5005",
+					request = "attach",
+					hostName = "localhost",
+					port = 5005,
+				},
+			}
 			
 			dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
 			dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
