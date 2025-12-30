@@ -25,3 +25,9 @@ vim.opt.isfname:append("@-@")
 
 -- Clipboard sync with system clipboard
 vim.opt.clipboard = "unnamedplus"
+
+-- Search settings
+vim.opt.hlsearch = true  -- Disable search highlighting by default
+vim.opt.incsearch = true  -- Still show matches as you type
+vim.opt.ignorecase = true  -- Case-insensitive search by default
+vim.opt.smartcase = true   -- Case-sensitive if search contains uppercase
