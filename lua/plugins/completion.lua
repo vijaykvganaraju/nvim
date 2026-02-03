@@ -15,17 +15,4 @@ return {
 			},
 		},
 	},
-	{
-		"supermaven-inc/supermaven-nvim",
-		desc = "AI code completion and suggestions",
-		config = function()
-			require("supermaven-nvim").setup({
-				keymaps = {
-					accept_suggestion = "<C-,>",
-					clear_suggestion = "<C-/>",
-					accept_word = "<C-.>",
-				},
-			})
-		end,
-	},
 }

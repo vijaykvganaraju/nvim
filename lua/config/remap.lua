@@ -1,7 +1,7 @@
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Go to nvmrc / dir view" })
 vim.keymap.set("n", "<leader>po", [["+gp]], { desc = "Paste clipboard content" });
 
-vim.keymap.set("n", "<leader>rn", "<cmd>set rnu!<cr>", { desc = "Toggle Relative Number" })
+vim.keymap.set("n", "<leader>tr", "<cmd>set rnu!<cr>", { desc = "Toggle Relative Number" })
 vim.keymap.set("n", "<leader>tw", "<cmd>set wrap!<cr>", { desc = "Toggle Wrap" })
 vim.keymap.set("n", "<leader>th", "<cmd>set hlsearch!<cr>", { desc = "Toggle search highlights" })
 
@@ -18,11 +18,17 @@ end, { desc = "Search and replace (interactive)" })
 vim.keymap.set("n", "<leader>ld", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
 vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, { desc = "Diagnostics list" })
 
--- Resize windows with Option + Arrow keys
-vim.keymap.set("n", "<M-Up>", "<cmd>resize +2<cr>", { desc = "Increase height" })
-vim.keymap.set("n", "<M-Down>", "<cmd>resize -2<cr>", { desc = "Decrease height" })
-vim.keymap.set("n", "<M-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease width" })
-vim.keymap.set("n", "<M-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase width" })
+-- Alternative resize keybindings (more reliable on macOS)
+vim.keymap.set("n", "<leader>w<Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease width" })
+vim.keymap.set("n", "<leader>w<Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase width" })
+vim.keymap.set("n", "<leader>w<Up>", "<cmd>resize +2<cr>", { desc = "Increase height" })
+vim.keymap.set("n", "<leader>w<Down>", "<cmd>resize -2<cr>", { desc = "Decrease height" })
+
+-- Split windows
+vim.keymap.set("n", "<M-S-h>", "<cmd>vertical resize -2<cr>", { desc = "Decrease width" })
+vim.keymap.set("n", "<M-S-l>", "<cmd>vertical resize +2<cr>", { desc = "Increase width" })
+vim.keymap.set("n", "<M-S-j>", "<cmd>resize -2<cr>", { desc = "Decrease height" })
+vim.keymap.set("n", "<M-S-k>", "<cmd>resize +2<cr>", { desc = "Increase height" })
 
 -- Window navigation
 vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
@@ -39,9 +45,35 @@ vim.keymap.set("n", "<leader>fw", function() require("snacks").picker.grep_word(
 
 -- Harpoon
 local harpoon = require("harpoon")
+
+-- Helper function to setup delete keybinding in harpoon menu
+local function setup_harpoon_delete()
+	vim.defer_fn(function()
+		local bufnr = vim.api.nvim_get_current_buf()
+		vim.keymap.set("n", "d", function()
+			local list = harpoon:list()
+			local idx = vim.fn.line(".") - 1  -- 0-indexed
+			if idx >= 0 and idx < list:length() then
+				-- Remove the item
+				list:remove_at(idx + 1)  -- 1-indexed
+				-- Close and reopen menu to refresh
+				vim.cmd("close")
+				vim.defer_fn(function()
+					harpoon.ui:toggle_quick_menu(list)
+					setup_harpoon_delete()  -- Re-setup delete keybinding
+				end, 10)
+			end
+		end, { buffer = bufnr, desc = "Delete from harpoon" })
+	end, 50)
+end
+
 vim.keymap.set("n", "<leader>ah", function() harpoon:list():add() end, { desc = "Harpoon add file" })
 vim.keymap.set("n", "<leader>ar", function() harpoon:list():remove() end, { desc = "Harpoon remove file" })
-vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon menu" })
+vim.keymap.set("n", "<C-e>", function() 
+	local list = harpoon:list()
+	harpoon.ui:toggle_quick_menu(list)
+	setup_harpoon_delete()
+end, { desc = "Harpoon menu" })
 vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end, { desc = "Harpoon file 1" })
 vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end, { desc = "Harpoon file 2" })
 vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end, { desc = "Harpoon file 3" })
@@ -103,13 +135,25 @@ vim.keymap.set("n", "<leader>dx", function()
 end, { desc = "Cleanup stuck debuggers" })
 vim.keymap.set("n", "<leader>dl", "<cmd>DapShowLog<cr>", { desc = "Show debug log" })
 
--- LazyGit
+-- Git
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
+-- Fugitive: <leader>gs - Git status (configured in git.lua)
 
--- Supermaven keymaps (configured in spec1.lua plugin setup)
+-- OpenCode (configured in opencode.lua plugin setup)
+-- <leader>ot - Toggle OpenCode tab
+-- <leader>of - Switch focus between OpenCode and editor
+-- <leader>oa - Ask OpenCode (@this context)
+-- <leader>os - OpenCode select (prompts, commands)
+-- <leader>oo - Add range to OpenCode (operator)
+-- <leader>ol - Add line to OpenCode
+-- <leader>ou - Scroll OpenCode up
+-- <leader>od - Scroll OpenCode down
+
+-- Avante auto-suggestions keymaps (configured in completion.lua plugin setup)
 -- <C-,> - Accept suggestion (insert mode)
--- <C-.> - Accept word (insert mode)
--- <C-/> - Clear suggestion (insert mode)
+-- <C-/> - Dismiss suggestion (insert mode)
+-- <M-]> - Next suggestion (insert mode)
+-- <M-[> - Previous suggestion (insert mode)
 
 -- LSP keymaps
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
