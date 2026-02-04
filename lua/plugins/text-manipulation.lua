@@ -8,7 +8,10 @@ return {
 	{
 		"monaqa/dial.nvim",
 		desc = "Increment and decrement numbers",
-		keys = { "<C-a>", { "<C-x>", mode = "n" } },
+		keys = {
+			{ "<C-a>", mode = "n" },
+			{ "<C-x>", mode = "n" },
+		},
 	},
 	{
 		"echasnovski/mini.nvim",

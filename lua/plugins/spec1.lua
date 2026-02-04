@@ -35,5 +35,6 @@ return flatten_plugins(
 	require("plugins.java"),
 	require("plugins.dap"),
 	require("plugins.dap-python"),
-	require("plugins.dap-js")
+	require("plugins.dap-js"),
+	require("plugins.ai-tools")
 )
