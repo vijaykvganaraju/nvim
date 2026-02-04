@@ -1,19 +1,52 @@
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex, { desc = "Go to nvmrc / dir view" })
-vim.keymap.set("n", "<leader>po", [["+gp]], { desc = "Paste clipboard content" });
+vim.keymap.set({"n", "v"}, "<leader>y", [["+y]], { desc = "Yank to system clipboard" })
+vim.keymap.set("n", "<leader>Y", [["+Y]], { desc = "Yank line to system clipboard" })
+vim.keymap.set({"n", "v"}, "<leader>p", [["+p]], { desc = "Paste from system clipboard" })
+vim.keymap.set({"n", "v"}, "<leader>P", [["+P]], { desc = "Paste before from system clipboard" })
+vim.keymap.set({"n", "v"}, "<leader>d", [["+d]], { desc = "Cut to system clipboard" })
+vim.keymap.set({"n", "v"}, "<leader>D", [["+D]], { desc = "Cut to EOL to clipboard" })
 
 vim.keymap.set("n", "<leader>tr", "<cmd>set rnu!<cr>", { desc = "Toggle Relative Number" })
 vim.keymap.set("n", "<leader>tw", "<cmd>set wrap!<cr>", { desc = "Toggle Wrap" })
 vim.keymap.set("n", "<leader>th", "<cmd>set hlsearch!<cr>", { desc = "Toggle search highlights" })
 
+-- Undotree (configured in navigation.lua plugin setup)
+-- <leader>u - Toggle Undotree
+
 -- Interactive search and replace
-vim.keymap.set("n", "<leader>sr", function()
-	local pattern = vim.fn.input("Search: ")
+local function search_and_replace(use_selection)
+	local pattern
+	if use_selection then
+		-- Get visually selected text
+		vim.cmd('noau normal! "vy')
+		pattern = vim.fn.getreg("v")
+	else
+		local ok, input = pcall(vim.fn.input, "Search: ")
+		if not ok or input == "" then
+			return
+		end
+		pattern = input
+	end
 	if pattern == "" then
 		return
 	end
-	local replacement = vim.fn.input("Replace with: ")
-	vim.cmd("%s/" .. vim.fn.escape(pattern, "/") .. "/" .. vim.fn.escape(replacement, "/") .. "/gc")
+	local ok, replacement = pcall(vim.fn.input, "Replace '" .. pattern .. "' with: ")
+	if not ok then
+		return
+	end
+	local success = pcall(vim.cmd, "%s/" .. vim.fn.escape(pattern, "/") .. "/" .. vim.fn.escape(replacement, "/") .. "/gc")
+	if not success then
+		vim.notify("No matches found", vim.log.levels.WARN)
+	end
+end
+
+vim.keymap.set("n", "<leader>sr", function()
+	search_and_replace(false)
 end, { desc = "Search and replace (interactive)" })
+
+vim.keymap.set("v", "<leader>sr", function()
+	search_and_replace(true)
+end, { desc = "Search and replace selection" })
 
 vim.keymap.set("n", "<leader>ld", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
 vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, { desc = "Diagnostics list" })
@@ -139,15 +172,19 @@ vim.keymap.set("n", "<leader>dl", "<cmd>DapShowLog<cr>", { desc = "Show debug lo
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
 -- Fugitive: <leader>gs - Git status (configured in git.lua)
 
--- OpenCode (configured in opencode.lua plugin setup)
--- <leader>ot - Toggle OpenCode tab
--- <leader>of - Switch focus between OpenCode and editor
--- <leader>oa - Ask OpenCode (@this context)
--- <leader>os - OpenCode select (prompts, commands)
--- <leader>oo - Add range to OpenCode (operator)
--- <leader>ol - Add line to OpenCode
--- <leader>ou - Scroll OpenCode up
--- <leader>od - Scroll OpenCode down
+-- OpenCode (configured in ai-tools.lua plugin setup)
+-- Normal mode:
+--   <leader>ot - Toggle OpenCode
+--   <leader>of - Switch focus between OpenCode and editor
+--   <leader>oa - Ask OpenCode (@this context) [also visual]
+--   <leader>os - OpenCode select (prompts, commands) [also visual]
+--   <leader>oo - Add range to OpenCode (operator) [also visual]
+--   <leader>ol - Add line to OpenCode
+--   <leader>ou - Scroll OpenCode up
+--   <leader>od - Scroll OpenCode down
+-- Terminal mode:
+--   <M-o> - Toggle OpenCode
+--   <M-f> - Switch focus between OpenCode and editor
 
 -- Avante auto-suggestions keymaps (configured in ai-tools.lua plugin setup)
 -- <C-,> - Accept suggestion (insert mode)
