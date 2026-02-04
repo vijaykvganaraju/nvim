@@ -1,1 +1,3 @@
-require("myscripts")
+require("config.lazy")
+require("config.remap")
+require("config.defaults")
