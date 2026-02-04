@@ -47,5 +47,32 @@ return {
 				require("opencode").command("session.half.page.down")
 			end, { desc = "OpenCode scroll down" })
 		end,
-	}
+	},
+	{
+		"yetone/avante.nvim",
+		desc = "AI chat and code assistant",
+		build = vim.fn.has("win32") ~= 0
+			and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+			or "make",
+		event = "VeryLazy",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+			"nvim-tree/nvim-web-devicons",
+			"stevearc/dressing.nvim",
+		},
+		opts = {
+			behaviour = {
+				auto_suggestions = true,
+			},
+			mappings = {
+				suggestion = {
+					accept = "<C-,>",
+					dismiss = "<C-/>",
+					next = "<M-]>",
+					prev = "<M-[>",
+				},
+			},
+		},
+	},
 }

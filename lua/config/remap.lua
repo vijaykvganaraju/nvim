@@ -149,7 +149,7 @@ vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
 -- <leader>ou - Scroll OpenCode up
 -- <leader>od - Scroll OpenCode down
 
--- Avante auto-suggestions keymaps (configured in completion.lua plugin setup)
+-- Avante auto-suggestions keymaps (configured in ai-tools.lua plugin setup)
 -- <C-,> - Accept suggestion (insert mode)
 -- <C-/> - Dismiss suggestion (insert mode)
 -- <M-]> - Next suggestion (insert mode)
