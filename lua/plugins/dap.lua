@@ -17,8 +17,12 @@ return {
 
 			dap.set_log_level("TRACE")
 
+			-- Default is 30 seconds, increase to 2 minutes for apps with large classpaths
+			dap.defaults.fallback.timeout = 120000
+
 			-- Java DAP adapter (for attach debugging)
-			-- Simple server adapter that connects to running Java debug port
+			-- Note: Launch configurations are handled by nvim-jdtls which provides its own adapter
+			-- This adapter is kept for manual attach scenarios
 			dap.adapters.java = function(callback, config)
 				callback({
 					type = "server",

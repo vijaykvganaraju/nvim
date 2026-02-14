@@ -1,4 +1,6 @@
 -- Main plugin spec file - loads all individual plugin files
+---@param ... table
+---@return table
 local function flatten_plugins(...)
 	local plugins = {}
 	for _, plugin_group in ipairs({...}) do

@@ -67,39 +67,39 @@ return {
 			vim.keymap.set("n", "<leader>ol", function()
 				return require("opencode").operator("@this ") .. "_"
 			end, { desc = "Add line to OpenCode", expr = true })
-			vim.keymap.set("n", "<leader>ou", function()
+			vim.keymap.set("n", "<M-u>", function()
 				require("opencode").command("session.half.page.up")
 			end, { desc = "OpenCode scroll up" })
-			vim.keymap.set("n", "<leader>od", function()
+			vim.keymap.set("n", "<M-d>", function()
 				require("opencode").command("session.half.page.down")
 			end, { desc = "OpenCode scroll down" })
 		end,
 	},
-	{
-		"yetone/avante.nvim",
-		desc = "AI chat and code assistant",
-		build = vim.fn.has("win32") ~= 0
-			and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-			or "make",
-		event = "VeryLazy",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"MunifTanjim/nui.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"stevearc/dressing.nvim",
-		},
-		opts = {
-			behaviour = {
-				auto_suggestions = true,
-			},
-			mappings = {
-				suggestion = {
-					accept = "<C-,>",
-					dismiss = "<C-/>",
-					next = "<M-]>",
-					prev = "<M-[>",
-				},
-			},
-		},
-	},
+	-- {
+	-- 	"yetone/avante.nvim",
+	-- 	desc = "AI chat and code assistant",
+	-- 	build = vim.fn.has("win32") ~= 0
+	-- 		and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+	-- 		or "make",
+	-- 	event = "VeryLazy",
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"MunifTanjim/nui.nvim",
+	-- 		"nvim-tree/nvim-web-devicons",
+	-- 		"stevearc/dressing.nvim",
+	-- 	},
+	-- 	opts = {
+	-- 		behaviour = {
+	-- 			auto_suggestions = true,
+	-- 		},
+	-- 		mappings = {
+	-- 			suggestion = {
+	-- 				accept = "<C-,>",
+	-- 				dismiss = "<C-/>",
+	-- 				next = "<M-]>",
+	-- 				prev = "<M-[>",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 }
