@@ -42,6 +42,9 @@ return {
 		-- Rust
 		vim.lsp.config("rust_analyzer", {})
 
+		-- JSON
+		vim.lsp.config("jsonls", {})
+
 		-- Java is handled by nvim-jdtls plugin
 	end,
 }

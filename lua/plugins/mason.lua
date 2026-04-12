@@ -14,6 +14,7 @@ return {
 				"java-debug-adapter",
 				"js-debug-adapter",
 				"lua-language-server",
+			"json-lsp",
 				-- Formatters (required for conform.nvim)
 				"prettier",              -- JSON, JS, TS, YAML, HTML, CSS
 				"stylua",                -- Lua
@@ -38,6 +39,7 @@ return {
 				"eslint",
 				"rust_analyzer",
 				"lua_ls",
+				"jsonls",
 			},
 			automatic_enable = { exclude = { "jdtls" } },
 		},

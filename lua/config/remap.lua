@@ -170,19 +170,36 @@ end, { desc = "DAP Logs (fullscreen)" })
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
 -- Fugitive: <leader>gs - Git status (configured in git.lua)
 
--- OpenCode (configured in ai-tools.lua plugin setup)
--- Normal mode:
---   <leader>ot - Toggle OpenCode
---   <leader>of - Switch focus between OpenCode and editor
---   <leader>oa - Ask OpenCode (@this context) [also visual]
---   <leader>os - OpenCode select (prompts, commands) [also visual]
---   <leader>oo - Add range to OpenCode (operator) [also visual]
---   <leader>ol - Add line to OpenCode
---   <M-u> - Scroll OpenCode up
---   <M-d> - Scroll OpenCode down
--- Terminal mode:
---   <M-o> - Toggle OpenCode
---   <M-f> - Switch focus between OpenCode and editor
+-- Sidekick AI
+vim.keymap.set({ "n", "i" }, "<tab>", function()
+	if not require("sidekick").nes_jump_or_apply() then
+		return "<Tab>"
+	end
+end, { expr = true, desc = "Goto/Apply Next Edit Suggestion" })
+vim.keymap.set({ "n", "t", "i", "x" }, "<c-.>", function()
+	require("sidekick.cli").focus()
+end, { desc = "Sidekick Focus" })
+vim.keymap.set("n", "<leader>aa", function()
+	require("sidekick.cli").toggle({ name = "wibey", focus = true })
+end, { desc = "Sidekick Toggle Wibey" })
+vim.keymap.set("n", "<leader>as", function()
+	require("sidekick.cli").select()
+end, { desc = "Select CLI" })
+vim.keymap.set("n", "<leader>ad", function()
+	require("sidekick.cli").close()
+end, { desc = "Detach CLI Session" })
+vim.keymap.set({ "x", "n" }, "<leader>at", function()
+	require("sidekick.cli").send({ msg = "{this}" })
+end, { desc = "Send This" })
+vim.keymap.set("n", "<leader>af", function()
+	require("sidekick.cli").send({ msg = "{file}" })
+end, { desc = "Send File" })
+vim.keymap.set("x", "<leader>av", function()
+	require("sidekick.cli").send({ msg = "{selection}" })
+end, { desc = "Send Visual Selection" })
+vim.keymap.set({ "n", "x" }, "<leader>ap", function()
+	require("sidekick.cli").prompt()
+end, { desc = "Sidekick Select Prompt" })
 
 -- LSP keymaps
 vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover documentation" })
