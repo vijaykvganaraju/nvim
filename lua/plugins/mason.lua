@@ -14,7 +14,7 @@ return {
 				"java-debug-adapter",
 				"js-debug-adapter",
 				"lua-language-server",
-			"json-lsp",
+				"json-lsp",
 				-- Formatters (required for conform.nvim)
 				"prettier",              -- JSON, JS, TS, YAML, HTML, CSS
 				"stylua",                -- Lua
