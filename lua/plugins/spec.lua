@@ -35,6 +35,7 @@ return flatten_plugins(
 	require("plugins.mason"),
 	require("plugins.lsp"),
 	require("plugins.java"),
+	require("plugins.rust"),
 	require("plugins.dap"),
 	require("plugins.ai-tools")
 )

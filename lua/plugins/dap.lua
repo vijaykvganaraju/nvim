@@ -42,6 +42,37 @@ return {
 				},
 			}
 
+			-- Rust / C / C++ debugger (codelldb via Mason)
+			local mason_path = vim.fn.stdpath("data") .. "/mason"
+			dap.adapters.codelldb = {
+				type = "server",
+				port = "${port}",
+				executable = {
+					command = mason_path .. "/bin/codelldb",
+					args = { "--port", "${port}" },
+				},
+			}
+
+			dap.configurations.rust = {
+				{
+					name = "Launch (cargo build target)",
+					type = "codelldb",
+					request = "launch",
+					program = function()
+						-- Try to auto-detect the debug binary, fall back to prompt
+						local cwd = vim.fn.getcwd()
+						local default = cwd .. "/target/debug/"
+						return vim.fn.input("Path to executable: ", default, "file")
+					end,
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+					args = {},
+				},
+			}
+			-- Share Rust config with C and C++ if you ever need them
+			dap.configurations.c = dap.configurations.rust
+			dap.configurations.cpp = dap.configurations.rust
+
 			-- Empty configs for UI buffers to prevent errors
 			dap.configurations.snacks_picker_list = {}
 			dap.configurations.snacks_explorer = {}

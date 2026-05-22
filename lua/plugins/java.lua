@@ -37,5 +37,20 @@ return {
 				end,
 			})
 		end,
-	}
+	},
+	{
+		"oclay1st/maven.nvim",
+		desc = "Run Maven commands from Neovim",
+		cmd = { "Maven", "MavenInit", "MavenExec", "MavenFavorites" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+		},
+		opts = {},
+		keys = {
+			{ "<leader>M", desc = "+Maven", mode = { "n", "v" } },
+			{ "<leader>Mm", "<cmd>Maven<cr>", desc = "Maven projects" },
+			{ "<leader>Mf", "<cmd>MavenFavorites<cr>", desc = "Maven favorites" },
+		},
+	},
 }

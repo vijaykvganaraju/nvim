@@ -220,3 +220,23 @@ vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Signature hel
 -- <leader>js - Stop main
 -- <leader>jl - Toggle logs
 -- <leader>jc - Refresh DAP config
+
+-- Maven keymaps (configured in plugins/java.lua via lazy `keys` spec)
+-- <leader>Mm - Maven projects
+-- <leader>Mf - Maven favorites
+
+-- Rust keymaps (configured in plugins/rust.lua, buffer-local for .rs files)
+-- <leader>rr - Runnables (cargo targets)
+-- <leader>rd - Debuggables (via codelldb)
+-- <leader>re - Expand macro under cursor
+-- <leader>rc - Open Cargo.toml
+-- <leader>rp - Jump to parent module
+-- K         - Rust hover actions (overrides global K hover for .rs buffers)
+
+-- Formatting (configured in plugins/text-manipulation.lua via lazy `keys` spec)
+-- <leader>bf - Format buffer (normal) / Format selection via LSP (visual)
+
+-- Text manipulation (configured in plugins/text-manipulation.lua)
+-- J     - Treesj toggle (split/join code blocks)
+-- <C-a> - dial.nvim increment
+-- <C-x> - dial.nvim decrement

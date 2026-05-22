@@ -13,8 +13,26 @@ return {
 			},
 		})
 
-		-- Python
-		vim.lsp.config("pyright", {})
+		-- Python (types / intellisense)
+		vim.lsp.config("pyright", {
+			settings = {
+				python = {
+					analysis = {
+						typeCheckingMode = "basic",
+						autoSearchPaths = true,
+						useLibraryCodeForTypes = true,
+					},
+				},
+			},
+		})
+
+		-- Python (linting + fast organize-imports / fixes)
+		vim.lsp.config("ruff", {
+			-- Let pyright own hover; ruff focuses on lint diagnostics & code actions
+			on_attach = function(client, _)
+				client.server_capabilities.hoverProvider = false
+			end,
+		})
 
 		-- JS / TS
 		vim.lsp.config("typescript-language-server", {
@@ -39,12 +57,44 @@ return {
 			},
 		})
 
-		-- Rust
-		vim.lsp.config("rust_analyzer", {})
-
 		-- JSON
 		vim.lsp.config("jsonls", {})
 
-		-- Java is handled by nvim-jdtls plugin
+		-- HTML
+		vim.lsp.config("html", {
+			filetypes = { "html", "templ" },
+			init_options = {
+				configurationSection = { "html", "css", "javascript" },
+				embeddedLanguages = { css = true, javascript = true },
+				provideFormatter = false, -- prettier handles formatting
+			},
+		})
+
+		-- CSS
+		vim.lsp.config("cssls", {
+			settings = {
+				css = { validate = true },
+				scss = { validate = true },
+				less = { validate = true },
+			},
+		})
+
+		-- Emmet (HTML / CSS / JSX / TSX expansions: e.g. `div.foo>ul>li*3`)
+		vim.lsp.config("emmet_language_server", {
+			filetypes = {
+				"html",
+				"css",
+				"scss",
+				"less",
+				"sass",
+				"javascriptreact",
+				"typescriptreact",
+				"vue",
+				"svelte",
+			},
+		})
+
+		-- Rust is managed by rustaceanvim (see plugins/rust.lua)
+		-- Java is managed by nvim-java (see plugins/java.lua)
 	end,
 }
