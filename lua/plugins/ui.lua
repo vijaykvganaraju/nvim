@@ -41,5 +41,16 @@ return {
 			},
 		},
 	},
-	{ "lukas-reineke/indent-blankline.nvim", desc = "Indentation guides for code", main = "ibl", opts = {} },
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		desc = "Indentation guides for code",
+		main = "ibl",
+		opts = {
+			exclude = {
+				filetypes = {
+					"yaml",
+				}
+			},
+		},
+	},
 }

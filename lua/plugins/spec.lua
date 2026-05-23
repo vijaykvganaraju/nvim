@@ -1,4 +1,6 @@
 -- Main plugin spec file - loads all individual plugin files
+---@param ... table
+---@return table
 local function flatten_plugins(...)
 	local plugins = {}
 	for _, plugin_group in ipairs({...}) do
@@ -33,8 +35,7 @@ return flatten_plugins(
 	require("plugins.mason"),
 	require("plugins.lsp"),
 	require("plugins.java"),
+	require("plugins.rust"),
 	require("plugins.dap"),
-	require("plugins.dap-python"),
-	require("plugins.dap-js"),
 	require("plugins.ai-tools")
 )

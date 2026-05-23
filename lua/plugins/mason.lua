@@ -6,20 +6,26 @@ return {
 			ensure_installed = {
 				-- LSP Servers
 				"pyright",
-				"ts-standard",
+				"ruff",                       -- Python linter (LSP)
 				"typescript-language-server",
 				"eslint-lsp",
 				"rust-analyzer",
 				"jdtls",
+				"lua-language-server",
+				"json-lsp",
+				"html-lsp",                   -- HTML
+				"css-lsp",                    -- CSS
+				"emmet-language-server",      -- Emmet expansions (HTML/CSS/JSX/TSX)
+				-- Debug Adapters
 				"java-debug-adapter",
 				"js-debug-adapter",
-				"lua-language-server",
+				"codelldb",                   -- Rust / C / C++ debugger
 				-- Formatters (required for conform.nvim)
-				"prettier",              -- JSON, JS, TS, YAML, HTML, CSS
-				"stylua",                -- Lua
-				"black",                 -- Python
-				"rustfmt",               -- Rust
-				"google-java-format",    -- Java
+				"prettier",                   -- JSON, JS, TS, YAML, HTML, CSS
+				"stylua",                     -- Lua
+				"black",                      -- Python
+				"rustfmt",                    -- Rust
+				"google-java-format",         -- Java
 			},
 			-- Auto-update installed packages
 			auto_update = false,
@@ -34,12 +40,17 @@ return {
 		opts = {
 			ensure_installed = {
 				"pyright",
+				"ruff",
 				"typescript-language-server",
 				"eslint",
-				"rust_analyzer",
 				"lua_ls",
+				"jsonls",
+				"html",
+				"cssls",
+				"emmet_language_server",
 			},
-			automatic_enable = { exclude = { "jdtls" } },
+			-- jdtls is managed by nvim-java; rust_analyzer is managed by rustaceanvim
+			automatic_enable = { exclude = { "jdtls", "rust_analyzer" } },
 		},
 	},
 }
